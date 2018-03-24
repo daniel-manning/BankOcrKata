@@ -1,6 +1,5 @@
 .idea/
 .stack-work/
-BankOcrKata.cabal
 dist
 dist-*
 cabal-dev

@@ -1,0 +1,65 @@
+-- This file has been generated from package.yaml by hpack version 0.20.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 890cac1d424f926107f7e2f42ba84b5d4e1468dfe2770342e640ae3d8630dbeb
+
+name:           BankOcrKata
+version:        0.1.0.0
+description:    Please see the README on Github at <https://github.com/githubuser/BankOcrKata#readme>
+homepage:       https://github.com/githubuser/BankOcrKata#readme
+bug-reports:    https://github.com/githubuser/BankOcrKata/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2018 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+extra-source-files:
+    ChangeLog.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/BankOcrKata
+
+library
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5, containers, split
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_BankOcrKata
+  default-language: Haskell2010
+
+executable BankOcrKata-exe
+  main-is: Main.hs
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      BankOcrKata
+    , base >=4.7 && <5
+    , containers
+  other-modules:
+      Paths_BankOcrKata
+  default-language: Haskell2010
+
+test-suite BankOcrKata-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      BankOcrKata
+    , base >=4.7 && <5
+    , hspec
+    , QuickCheck
+  other-modules:
+      Paths_BankOcrKata
+  default-language: Haskell2010
