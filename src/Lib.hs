@@ -1,5 +1,5 @@
 module Lib
-    ( createDigit, readAccount, g
+    ( createDigit, readAccount, g, checksum, isValid, validateString
     ) where
 
 import qualified Data.Map.Strict as Map
@@ -24,3 +24,12 @@ g::[[[a]]] -> [[[a]]]
 g [] = []
 g ([x]:[y]:[z]:[]) = [[x,y,z]]
 g (x:y:z:[]) = [head x, head y, head z] : g (tail x : tail y : tail z : [])
+
+checksum::[Int] -> Int
+checksum = ((flip mod 11) . (foldr (\k l ->  l + fst k * snd k) 0) . (zip [1,2..]) . reverse)
+
+isValid::[Int] -> Bool
+isValid = (== 0).checksum
+
+validateString::String -> Bool
+validateString = isValid . (map digitToInt)

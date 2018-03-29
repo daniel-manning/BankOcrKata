@@ -131,3 +131,13 @@ main = hspec $ do
          readAccount  [" _  _  _  _  _  _  _  _    ",
                        "| || || || || || || ||_   |",
                        "|_||_||_||_||_||_||_| _|  |"]  `shouldBe` "000000051"
+
+  describe "checksum calculation" $ do
+    it "should calculate the correct checksum" $ do
+      checksum [3,4,5,8,8,2,8,6,5] `shouldBe` 0
+
+    it "should be a valid checksum" $ do
+      isValid [3,4,5,8,8,2,8,6,5] `shouldBe` True
+
+    it "should validate account strings" $ do
+      validateString "345882865" `shouldBe` True
