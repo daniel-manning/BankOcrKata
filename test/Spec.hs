@@ -132,12 +132,41 @@ main = hspec $ do
                        "| || || || || || || ||_   |",
                        "|_||_||_||_||_||_||_| _|  |"]  `shouldBe` "000000051"
 
+    it "should be able to read line" $ do
+         readAccount  ["    _  _  _  _  _  _     _ ",
+                       "|_||_|| || ||_   |  |  | _ ",
+                       "  | _||_||_||_|  |  |  | _|"]  `shouldBe` "49006771?"
+
   describe "checksum calculation" $ do
     it "should calculate the correct checksum" $ do
       checksum [3,4,5,8,8,2,8,6,5] `shouldBe` 0
+
+    it "should calculate the correct checksum" $ do
+      checksum [6,6,4,3,7,1,4,9,5] `shouldBe` 2
 
     it "should be a valid checksum" $ do
       isValid [3,4,5,8,8,2,8,6,5] `shouldBe` True
 
     it "should validate account strings" $ do
       validateString "345882865" `shouldBe` True
+
+  describe "account description" $ do
+    it "should handle an ill defined string" $ do
+      describeAccount ["    _  _  _  _  _  _     _ ",
+                       "|_||_|| || ||_   |  |  | _ ",
+                       "  | _||_||_||_|  |  |  | _|"] `shouldBe` "49006771? ILL"
+
+    it "should handle a valid account" $ do
+      describeAccount [" _  _  _  _  _  _  _  _    ",
+                       "| || || || || || || ||_   |",
+                       "|_||_||_||_||_||_||_| _|  |"] `shouldBe` "000000051"
+
+    it "should handle a multiple invalid charaters in account" $ do
+      describeAccount ["    _  _     _  _  _  _  _ ",
+                       "  | _| _||_| _ |_   ||_||_|",
+                       "  ||_  _|  | _||_|  ||_| _ "] `shouldBe` "1234?678? ILL"
+
+    it "should handle an account failing validation" $ do
+      describeAccount [" _  _     _  _        _  _ ",
+                       "|_ |_ |_| _|  |  ||_||_||_ ",
+                       "|_||_|  | _|  |  |  | _| _|"] `shouldBe` "664371495 ERR"

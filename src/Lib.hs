@@ -1,5 +1,5 @@
 module Lib
-    ( createDigit, readAccount, g, checksum, isValid, validateString
+    ( createDigit, readAccount, g, checksum, isValid, validateString, describeAccount
     ) where
 
 import qualified Data.Map.Strict as Map
@@ -15,7 +15,7 @@ createDigit::[String] -> Maybe Int
 createDigit s = Map.lookup ((map.map) f s) characterMap
 
 readAccount::[String] -> String
-readAccount s = map intToDigit $ catMaybes $ map createDigit (g chunks)
+readAccount s = map (maybe '?' intToDigit) $ map createDigit (g chunks)
   where
     chunks::[[String]]
     chunks = map (chunksOf 3) s
@@ -33,3 +33,13 @@ isValid = (== 0).checksum
 
 validateString::String -> Bool
 validateString = isValid . (map digitToInt)
+
+extraDescription::String -> String
+extraDescription s | elem '?' s = " ILL"
+                   | not $ validateString s  =  " ERR"
+                   | otherwise = ""
+
+describeAccount::[String] -> String
+describeAccount s = k ++ (extraDescription k)
+                      where k = (readAccount s)
+
