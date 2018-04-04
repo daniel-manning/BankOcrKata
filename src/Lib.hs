@@ -36,6 +36,14 @@ isValid = (== 0).checksum
 validateString::String -> Bool
 validateString s = (notElem '?' s) && isValid (map digitToInt s)
 
+data Result = Valid String | Missing String | Error String
+
+analyseString::String -> Result
+analyseString s | elem '?' s = Missing s
+                | isValid (map digitToInt s) = Valid s
+                | otherwise = Error s
+
+
 extraDescription::String -> String
 extraDescription s | elem '?' s = " ILL"
                    | not $ validateString s = " ERR"
@@ -51,8 +59,13 @@ everyCharacterWithHammingDistance d character = map snd $ filter ((d ==).fst) $ 
 hammingDistance::(Eq a) => [a] -> [a] -> Int
 hammingDistance xs ys = length $ filter id $ zipWith (/=) xs ys
 
---readPossibleDigits::[String] -> [[Int]]
+readPossibleDigits::[String] -> [[Int]]
 readPossibleDigits s = map (\l -> (maybeToList (fst l)) ++ (everyCharacterWithHammingDistance 1 (snd l))) $ map (\k -> (createDigit k, ((map.map) f k)))(g chunks)
+  where
+      chunks = map (chunksOf 3) s
+
+readOnlyMissingDigits :: [String] -> [[Int]]
+readOnlyMissingDigits s = map (\l -> maybe (everyCharacterWithHammingDistance 1 (snd l)) (:[]) (fst l)) $ map (\k -> (createDigit k, ((map.map) f k)))(g chunks)
   where
       chunks = map (chunksOf 3) s
 
@@ -72,7 +85,10 @@ tryAllPossibilities s l = do l1 <- l !! 0
                              return r
 
 readAndTestAccount::[String] -> String
-readAndTestAccount k =  if(validateString(s)) then s else  formatChoices s $ (map.map) intToDigit (tryAllPossibilities s $ readPossibleDigits k)
+readAndTestAccount k =  case (analyseString(s))  of
+                        Valid s -> s
+                        Missing s -> formatChoices s $ (map.map) intToDigit (tryAllPossibilities s $ readOnlyMissingDigits k)
+                        Error s -> formatChoices s $ (map.map) intToDigit (tryAllPossibilities s $ readPossibleDigits k)
    where s = readAccount k
 
 formatChoices::String -> [String] -> String
